@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandScape - AI Brand Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <section id="welcome" class="step active">
+            <div class="welcome-container">
+                <div class="welcome-content">
+                    <h1>Welcome to BrandScape!</h1>
+                    <p class="welcome-message">I'll ask you a few questions to help craft your business name, colour scheme, and logo.</p>
+                    <button onclick="startJourney()" class="btn btn-primary btn-large">Let's get started</button>
+                </div>
+                <div class="welcome-image">
+                    <img src="/public/welcome-image.png" alt="Welcome to BrandScape" />
+                </div>
+            </div>
+        </section>
+
+        <header style="display:none;" id="mainHeader">
+            <h1>BrandScape</h1>
+            <p class="subtitle">AI-Powered Brand Name, Colour & Logo Generator</p>
+        </header>
+
+        <!-- Step 1: Business Description -->
+        <section id="step1" class="step active">
+            <img src="/public/step-image.png" alt="Step" class="step-image" />
+            <h2>Step 1: Tell us about your business</h2>
+            <p class="step-description">Describe your business in a few words</p>
+            <textarea id="businessDescription" placeholder="e.g., Handmade knitwear for cozy homes" rows="3"></textarea>
+            <button onclick="nextStep(1)" class="btn btn-primary">Continue</button>
+        </section>
+
+        <!-- Step 2: Visual Elements -->
+        <section id="step2" class="step">
+            <img src="/public/step-image.png" alt="Step" class="step-image" />
+            <h2>Step 2: Visual Elements</h2>
+            <p class="step-description">What visual elements best represent your business?</p>
+            <input type="text" id="visualElements" placeholder="e.g., knitting needles, yarn">
+            <button onclick="nextStep(2)" class="btn btn-primary">Continue</button>
+            <button onclick="previousStep(2)" class="btn btn-secondary">Back</button>
+        </section>
+
+        <!-- Step 3: Brand Values -->
+        <section id="step3" class="step">
+            <img src="/public/step-image.png" alt="Step" class="step-image" />
+            <h2>Step 3: Brand Values</h2>
+            <p class="step-description">What are your brand values?</p>
+            <input type="text" id="brandValues" placeholder="e.g., warmth, craftsmanship">
+            <button onclick="nextStep(3)" class="btn btn-primary">Generate Names</button>
+            <button onclick="previousStep(3)" class="btn btn-secondary">Back</button>
+        </section>
+
+        <!-- Step 4: Name Suggestions -->
+        <section id="step4" class="step">
+            <h2>Step 4: Choose a Name</h2>
+            <div id="loadingNames" class="loading">
+                <div class="spinner"></div>
+                <p>Generating name suggestions...</p>
+            </div>
+            <div id="nameSuggestions" class="name-suggestions"></div>
+            <button onclick="refreshNames()" class="btn btn-secondary" id="refreshNamesBtn" style="display:none;">Refresh Names</button>
+        </section>
+
+        <!-- Step 5: Color Palettes -->
+        <section id="step5" class="step">
+            <h2>Step 5: Choose Color Palette</h2>
+            <div id="selectedNameDisplay" class="selected-name"></div>
+            <div id="loadingColors" class="loading">
+                <div class="spinner"></div>
+                <p>Generating colour recommendations...</p>
+            </div>
+            <div id="colorPalettes" class="color-palettes"></div>
+            <button onclick="refreshColors()" class="btn btn-secondary" id="refreshColorsBtn" style="display:none;">Refresh Colours</button>
+            <button onclick="previousStep(5)" class="btn btn-secondary">Back to Names</button>
+        </section>
+
+        <!-- Step 6: Logo Generation -->
+        <section id="step6" class="step">
+            <h2>Step 6: Your Logo</h2>
+            <div id="selectedColorsDisplay" class="selected-colors"></div>
+            <div id="loadingLogo" class="loading">
+                <div class="spinner"></div>
+                <p>Generating logo prompt...</p>
+            </div>
+            <div id="logoPromptSection" style="display:none;">
+                <h3 style="margin-bottom: 16px; font-size: 1.25rem; color: var(--primary-color);">Logo Prompt</h3>
+                <p class="step-description" style="margin-bottom: 12px;">Review and edit the prompt that will be used to generate your logo:</p>
+                <textarea id="logoPromptText" rows="4" style="width: 100%; padding: 14px 18px; border: 2px solid var(--secondary-color); border-radius: 0; font-size: 1rem; font-family: inherit; background: var(--card-bg); color: var(--text-primary); margin-bottom: 20px;"></textarea>
+                <button onclick="generateLogoFromPrompt()" class="btn btn-primary">Generate Logo</button>
+                <button onclick="regeneratePrompt()" class="btn btn-secondary" style="margin-left: 12px;">Regenerate Prompt</button>
+            </div>
+            <div id="loadingLogoGeneration" class="loading" style="display:none;">
+                <div class="spinner"></div>
+                <p>Generating your logo...</p>
+            </div>
+            <div id="logoDisplay" class="logo-display"></div>
+            <button onclick="previousStep(6)" class="btn btn-secondary" id="backToColorsBtn" style="display:none;">Back to Colours</button>
+            <button id="learnMoreBtn" class="btn btn-secondary" style="display:none;" onclick="openLegalNotes()">Learn More</button>
+        </section>
+
+        <!-- Legal Notes Modal -->
+        <div id="legalNotesModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeLegalNotes()">&times;</span>
+                <div class="legal-notes">
+                    <h2>Important Legal Information</h2>
+                    <p><strong>Trademark Search Disclaimer:</strong></p>
+                    <p>The trademark searches provided by BrandScape are preliminary and for informational purposes only. They are not a substitute for professional legal advice or a comprehensive trademark search.</p>
+                    
+                    <p><strong>For Accurate Trademark Searches, please consider visiting the following links:</strong></p>
+                    <ul>
+                        <li><strong>European Union:</strong> <a href="https://euipo.europa.eu/eSearch/" target="_blank">EUIPO Search</a></li>
+                        <li><strong>United Kingdom:</strong> <a href="https://www.gov.uk/search-for-trademark" target="_blank">UK Intellectual Property Office</a></li>
+                        <li><strong>International:</strong> <a href="https://www.wipo.int/branddb/en/" target="_blank">WIPO Global Brand Database</a></li>
+                    </ul>
+                    
+            
+                    <p><strong>Thank you for using BrandScape! We wish you the best of luck with your business.</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <section id="results" class="results-section" style="display:none;">
+            <h2>Your Brand Summary</h2>
+            <div id="resultsContent"></div>
+        </section>
+    </div>
+
+    <script src="/public/app.js"></script>
+</body>
+</html>
+
